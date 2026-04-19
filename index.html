@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Criterion — AI-Powered Coding Assignments</title>
+  <meta name="description" content="Criterion is an AI-powered coding assignment platform for instructors. Automated grading, Canvas LMS integration, real-time feedback, peer review, and more." />
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1e293b;
+      background: #fff;
+      line-height: 1.6;
+    }
+    a { color: #6366f1; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    h1, h2, h3, h4, h5 { line-height: 1.25; font-weight: 700; }
+    h2 { font-size: 2rem; margin-bottom: 0.5rem; }
+    h3 { font-size: 1.35rem; margin-bottom: 0.4rem; }
+    h4 { font-size: 1.05rem; margin-bottom: 0.3rem; }
+    p { margin-bottom: 0.85rem; color: #334155; }
+    ul, ol { padding-left: 1.4rem; color: #334155; }
+    li { margin-bottom: 0.3rem; }
+    code {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 0.875rem;
+      font-family: 'SFMono-Regular', 'Cascadia Code', Consolas, monospace;
+      color: #6366f1;
+    }
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      border-radius: 8px;
+      padding: 1.2rem 1.5rem;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      margin: 1rem 0;
+      font-family: 'SFMono-Regular', 'Cascadia Code', Consolas, monospace;
+    }
+    pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+    img { max-width: 100%; height: auto; border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+    th { background: #6366f1; color: #fff; padding: 0.75rem 1rem; text-align: left; font-weight: 600; }
+    td { padding: 0.65rem 1rem; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+    tr:nth-child(even) td { background: #f8fafc; }
+    tr:hover td { background: #f1f5f9; }
+    .check { color: #10b981; font-size: 1.1rem; }
+    .partial { color: #f59e0b; font-size: 1.1rem; }
+    .cross { color: #ef4444; font-size: 1.1rem; }
+
+    /* ===== LAYOUT UTILITIES ===== */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+    .section { padding: 5rem 0; }
+    .section-alt { background: #f8fafc; }
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #6366f1;
+      margin-bottom: 0.5rem;
+    }
+    .section-title { font-size: 2rem; color: #1e293b; margin-bottom: 0.75rem; }
+    .section-sub { font-size: 1.1rem; color: #64748b; max-width: 600px; margin-bottom: 3rem; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.75rem;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .card:hover { box-shadow: 0 4px 20px rgba(99,102,241,0.1); border-color: #a5b4fc; }
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: #eef2ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .card-icon svg { width: 22px; height: 22px; stroke: #6366f1; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .badge-indigo { background: #eef2ff; color: #6366f1; }
+    .badge-green { background: #d1fae5; color: #059669; }
+    .badge-amber { background: #fef3c7; color: #d97706; }
+    .badge-red { background: #fee2e2; color: #dc2626; }
+    .badge-slate { background: #f1f5f9; color: #475569; }
+    .callout {
+      background: #eef2ff;
+      border-left: 4px solid #6366f1;
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: #3730a3;
+      font-size: 0.95rem;
+    }
+    .callout-warn {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      color: #92400e;
+      font-size: 0.95rem;
+    }
+
+    /* ===== SCREENSHOT PLACEHOLDER ===== */
+    .screenshot-placeholder {
+      border: 2px dashed #cbd5e1;
+      border-radius: 10px;
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      aspect-ratio: 16 / 9;
+      margin: 1.5rem 0;
+      color: #94a3b8;
+      font-size: 0.9rem;
+      text-align: center;
+      gap: 0.5rem;
+    }
+    .screenshot-placeholder svg { width: 32px; height: 32px; stroke: #cbd5e1; fill: none; stroke-width: 1.5; }
+    .screenshot-placeholder span { font-style: italic; }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 1.5rem;
+    }
+    .navbar-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      height: 60px;
+      gap: 2rem;
+    }
+    .navbar-brand {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #6366f1;
+      letter-spacing: -0.02em;
+      flex-shrink: 0;
+    }
+    .navbar-brand span { color: #1e293b; }
+    .navbar-links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      list-style: none;
+      flex: 1;
+    }
+    .navbar-links a {
+      display: block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #475569;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+    }
+    .navbar-links a:hover { background: #f1f5f9; color: #1e293b; text-decoration: none; }
+    .navbar-links a.active { background: #eef2ff; color: #6366f1; }
+    .navbar-hamburger {
+      display: none;
+      background: none;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .navbar-hamburger span { display: block; width: 18px; height: 2px; background: #475569; border-radius: 2px; }
+    .navbar-mobile {
+      display: none;
+      flex-direction: column;
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0.75rem 1.5rem;
+      gap: 0.25rem;
+    }
+    .navbar-mobile.open { display: flex; }
+    .navbar-mobile a {
+      padding: 0.6rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #475569;
+    }
+    .navbar-mobile a:hover { background: #f1f5f9; color: #1e293b; text-decoration: none; }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(160deg, #fff 0%, #f8fafc 60%, #eef2ff 100%);
+      padding: 6rem 0 5rem;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      background: #eef2ff;
+      color: #6366f1;
+      border: 1px solid #c7d2fe;
+      border-radius: 999px;
+      padding: 4px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      color: #1e293b;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: #64748b;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3.5rem; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn:hover { transform: translateY(-1px); text-decoration: none; }
+    .btn-primary { background: #6366f1; color: #fff; box-shadow: 0 2px 8px rgba(99,102,241,0.3); }
+    .btn-primary:hover { background: #5457e8; box-shadow: 0 4px 16px rgba(99,102,241,0.4); color: #fff; }
+    .btn-outline { background: #fff; color: #6366f1; border: 1.5px solid #6366f1; }
+    .btn-outline:hover { background: #eef2ff; color: #6366f1; }
+    .hero-pills { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 999px;
+      padding: 5px 14px;
+      font-size: 0.825rem;
+      color: #475569;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .pill-dot { width: 7px; height: 7px; border-radius: 50%; background: #6366f1; }
+
+    /* ===== FEATURES GRID ===== */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+
+    /* ===== INSTRUCTOR GUIDE ===== */
+    .guide-layout { display: grid; grid-template-columns: 230px 1fr; gap: 3rem; align-items: start; }
+    .guide-sidebar {
+      position: sticky;
+      top: 80px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .guide-sidebar h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; margin-bottom: 0.75rem; }
+    .guide-sidebar ul { list-style: none; padding: 0; }
+    .guide-sidebar li { margin-bottom: 0.1rem; }
+    .guide-sidebar a {
+      display: block;
+      padding: 0.4rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      color: #475569;
+      transition: background 0.15s, color 0.15s;
+    }
+    .guide-sidebar a:hover { background: #eef2ff; color: #6366f1; text-decoration: none; }
+    .guide-sidebar a.active { background: #eef2ff; color: #6366f1; font-weight: 600; }
+    .guide-content section { margin-bottom: 3.5rem; padding-top: 1rem; }
+    .guide-content h3 { font-size: 1.4rem; color: #1e293b; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #e2e8f0; }
+    .guide-content h4 { color: #6366f1; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+    .step-list { list-style: none; padding: 0; counter-reset: steps; }
+    .step-list li {
+      counter-increment: steps;
+      padding: 0.75rem 1rem 0.75rem 3rem;
+      position: relative;
+      border-left: 2px solid #e2e8f0;
+      margin-left: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .step-list li::before {
+      content: counter(steps);
+      position: absolute;
+      left: -1.1rem;
+      top: 0.7rem;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #6366f1;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== TEST CASE TYPES ===== */
+    .tc-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .tc-tab {
+      padding: 0.4rem 1rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: #fff;
+      color: #64748b;
+      transition: all 0.15s;
+    }
+    .tc-tab.active { background: #6366f1; color: #fff; border-color: #6366f1; }
+    .tc-panel { display: none; }
+    .tc-panel.active { display: block; }
+
+    /* ===== PERMISSIONS TABLE ===== */
+    .perms-table th:first-child { min-width: 200px; }
+
+    /* ===== ACCORDION ===== */
+    .accordion { border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 1rem; }
+    .accordion-header {
+      padding: 1.1rem 1.5rem;
+      background: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      color: #1e293b;
+      transition: background 0.15s;
+      user-select: none;
+    }
+    .accordion-header:hover { background: #f8fafc; }
+    .accordion-arrow { font-size: 1.1rem; color: #94a3b8; transition: transform 0.25s; }
+    .accordion-body { display: none; padding: 0 1.5rem 1.5rem; }
+    .accordion.open .accordion-body { display: block; }
+    .accordion.open .accordion-arrow { transform: rotate(180deg); }
+
+    /* ===== PIPELINE STEPS ===== */
+    .pipeline { display: flex; flex-direction: column; gap: 0; }
+    .pipeline-step {
+      display: flex;
+      gap: 1.5rem;
+      position: relative;
+    }
+    .pipeline-step + .pipeline-step::before {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 0;
+      width: 2px;
+      height: 100%;
+      background: #e2e8f0;
+      z-index: 0;
+    }
+    .pipeline-num {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #eef2ff;
+      border: 2px solid #6366f1;
+      color: #6366f1;
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+    .pipeline-content { padding: 0.5rem 0 2rem; flex: 1; }
+    .pipeline-content h4 { color: #1e293b; margin-top: 0; margin-bottom: 0.4rem; }
+
+    /* ===== SECURITY ===== */
+    .security-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .security-card { padding: 1.5rem; border-radius: 12px; border: 1px solid #e2e8f0; background: #fff; }
+    .security-card h4 { display: flex; align-items: center; gap: 0.5rem; font-size: 1rem; color: #1e293b; margin-bottom: 0.6rem; }
+    .security-icon { font-size: 1.25rem; }
+
+    /* ===== COMPARE TABLE ===== */
+    .compare-wrap { overflow-x: auto; }
+    .compare-table th { text-align: center; }
+    .compare-table th:first-child { text-align: left; }
+    .compare-table td:not(:first-child) { text-align: center; }
+    .compare-table th.highlight { background: #6366f1; }
+    .compare-table td.highlight { background: #f5f3ff; font-weight: 500; }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: #1e293b;
+      color: #94a3b8;
+      padding: 3rem 1.5rem;
+      text-align: center;
+    }
+    footer .footer-brand { color: #fff; font-size: 1.2rem; font-weight: 800; margin-bottom: 0.5rem; }
+    footer p { color: #64748b; font-size: 0.9rem; margin-bottom: 0.4rem; }
+    footer a { color: #a5b4fc; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .guide-layout { grid-template-columns: 1fr; }
+      .guide-sidebar { position: static; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .navbar-links { display: none; }
+      .navbar-hamburger { display: flex; margin-left: auto; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-4 { grid-template-columns: 1fr 1fr; }
+      .hero { padding: 4rem 0 3.5rem; }
+      h2 { font-size: 1.6rem; }
+      .pipeline-step + .pipeline-step::before { left: 17px; }
+      .pipeline-num { width: 36px; height: 36px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="navbar-inner">
+    <a href="#hero" class="navbar-brand" aria-label="Criterion home">Criterion</a>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#instructor-guide">Instructor Guide</a></li>
+      <li><a href="#student-guide">Student Guide</a></li>
+      <li><a href="#advanced">Advanced</a></li>
+      <li><a href="#security">Security</a></li>
+      <li><a href="#compare">vs Gradescope</a></li>
+    </ul>
+    <button class="navbar-hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="navbar-mobile" id="mobileMenu" role="menu">
+  <a href="#features" role="menuitem">Features</a>
+  <a href="#instructor-guide" role="menuitem">Instructor Guide</a>
+  <a href="#student-guide" role="menuitem">Student Guide</a>
+  <a href="#advanced" role="menuitem">Advanced Features</a>
+  <a href="#security" role="menuitem">Security & Privacy</a>
+  <a href="#compare" role="menuitem">vs Gradescope</a>
+</div>
+
+<!-- ===== HERO ===== -->
+<section id="hero" class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">Built for CS Educators</div>
+    <h1>AI-Powered Coding Assignments for Modern Educators</h1>
+    <p>Criterion automates code grading, delivers AI feedback to every student, and syncs grades directly to Canvas — so you spend less time on logistics and more time teaching.</p>
+    <div class="hero-ctas">
+      <a href="#instructor-guide" class="btn btn-primary">Get Started as Instructor</a>
+      <a href="#features" class="btn btn-outline">Explore Features</a>
+    </div>
+    <div class="hero-pills">
+      <span class="pill"><span class="pill-dot"></span>Instant Grading</span>
+      <span class="pill"><span class="pill-dot"></span>Canvas LMS Sync</span>
+      <span class="pill"><span class="pill-dot"></span>AI Feedback</span>
+      <span class="pill"><span class="pill-dot"></span>5 Languages</span>
+      <span class="pill"><span class="pill-dot"></span>Peer Review</span>
+      <span class="pill"><span class="pill-dot"></span>Plagiarism Detection</span>
+      <span class="pill"><span class="pill-dot"></span>Rubric-Based Grading</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES OVERVIEW ===== -->
+<section id="features" class="section section-alt">
+  <div class="container">
+    <div class="section-label">Platform Features</div>
+    <h2 class="section-title">Everything you need to run coding assignments</h2>
+    <p class="section-sub">Criterion brings together code execution, AI feedback, Canvas integration, and grading tools into one cohesive platform.</p>
+
+    <div class="features-grid">
+      <!-- Card 1 -->
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h3>Automated Code Execution</h3>
+        <p>Student submissions are compiled and executed in an isolated sandbox via Judge0. Supports Python, C, C++, Java, and JavaScript with configurable timeouts and memory limits.</p>
+        <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.75rem;">
+          <span class="badge badge-slate">Python</span>
+          <span class="badge badge-slate">C / C++</span>
+          <span class="badge badge-slate">Java</span>
+          <span class="badge badge-slate">JavaScript</span>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <h3>AI-Generated Feedback</h3>
+        <p>After every submission, Claude AI generates personalized, constructive feedback per student — highlighting what passed, what failed, and concrete next steps. Feedback aligns to your rubric when one is active.</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <h3>Canvas LMS Integration</h3>
+        <p>Connect your Canvas account via OAuth. Criterion syncs your roster, sections, and enrollments automatically. When grading is done, post grades directly back to Canvas with one click.</p>
+        <div style="margin-top:0.75rem;"><span class="badge badge-green">OAuth 2.0 Secure</span></div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <h3>Flexible Test Cases</h3>
+        <p>Five test case types cover every grading scenario: standard input/output, language-specific unit tests, hidden tests, custom bash scripts, and special judge validators for complex output.</p>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <h3>Rubric-Based Grading</h3>
+        <p>Define multi-criterion rubrics with performance levels. AI can draft rubrics from your assignment description. Calibration tools help you verify and correct grader consistency across TAs.</p>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Academic Integrity</h3>
+        <p>Built-in MOSS plagiarism detection flags suspicious submission pairs. Peer review workflows promote authentic engagement. Full audit logs track every grading action with timestamps.</p>
+      </div>
+    </div>
+
+    <!-- Screenshot placeholder -->
+    <div class="screenshot-placeholder" style="margin-top:2.5rem;">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <span>Screenshot: Platform overview / instructor dashboard</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== INSTRUCTOR GUIDE ===== -->
+<section id="instructor-guide" class="section">
+  <div class="container">
+    <div class="section-label">For Instructors</div>
+    <h2 class="section-title">Instructor Guide</h2>
+    <p class="section-sub">A complete walkthrough from account setup to posting grades — every feature explained.</p>
+
+    <div class="guide-layout">
+      <!-- Left sidebar -->
+      <aside class="guide-sidebar" id="instructorSidebar">
+        <h4>In this guide</h4>
+        <ul>
+          <li><a href="#ig-account">Account Setup</a></li>
+          <li><a href="#ig-courses">Course Management</a></li>
+          <li><a href="#ig-assignment">Creating an Assignment</a></li>
+          <li><a href="#ig-testcases">Test Cases</a></li>
+          <li><a href="#ig-rubric">Rubrics</a></li>
+          <li><a href="#ig-settings">Assignment Settings</a></li>
+          <li><a href="#ig-deeplink">Canvas Deep Link</a></li>
+          <li><a href="#ig-grading">Running Grading</a></li>
+          <li><a href="#ig-review">Grading Workspace</a></li>
+          <li><a href="#ig-roles">Roles & Permissions</a></li>
+        </ul>
+      </aside>
+
+      <!-- Guide content -->
+      <div class="guide-content">
+
+        <!-- Account Setup -->
+        <section id="ig-account">
+          <h3>Account Setup</h3>
+          <h4>Registration</h4>
+          <p>Go to the Criterion login page and click <strong>Create an account</strong>. Fill in your full name, institutional email address, and a secure password (minimum 8 characters, must include a letter and a number). Select <strong>Instructor</strong> as your role.</p>
+          <ol class="step-list">
+            <li>Enter your full name, email, and password.</li>
+            <li>Select <strong>Instructor</strong> from the role dropdown.</li>
+            <li>Submit the form. A verification email is sent to your address.</li>
+            <li>Open the email and click the verification link.</li>
+            <li>On first login you will be prompted to review and accept the data usage consent document. You must accept before accessing the platform.</li>
+          </ol>
+          <div class="callout">Password reset is available at any time via the "Forgot password?" link on the login page. A reset link is sent to your registered email.</div>
+          <div class="screenshot-placeholder">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Screenshot: Registration page</span>
+          </div>
+        </section>
+
+        <!-- Course Management -->
+        <section id="ig-courses">
+          <h3>Course Management</h3>
+          <p>Criterion supports two ways to create courses: importing them from Canvas, or creating them manually.</p>
+
+          <h4>Connecting to Canvas</h4>
+          <ol class="step-list">
+            <li>From the instructor dashboard, click <strong>Connect Canvas Account</strong>.</li>
+            <li>You will be redirected to your institution's Canvas login page (OAuth 2.0).</li>
+            <li>Authorize Criterion to access your Canvas courses.</li>
+            <li>Alternatively, paste a Canvas API access token directly if your institution prefers that method.</li>
+          </ol>
+
+          <h4>Syncing a Course</h4>
+          <p>Once connected, Criterion shows a list of all your Canvas courses. Check the courses you want to import and click <strong>Sync Selected Courses</strong>. Criterion will:</p>
+          <ul>
+            <li>Import course name, code, and sections.</li>
+            <li>Sync the full student roster with names and emails.</li>
+            <li>Map enrollment roles (student, TA, instructor, observer).</li>
+            <li>Display real-time sync progress via a live event log.</li>
+          </ul>
+
+          <h4>Sync Status Indicators</h4>
+          <p>Each course shows one of these status badges:</p>
+          <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin:1rem 0;">
+            <span class="badge badge-green">Healthy</span>
+            <span class="badge badge-amber">Stale</span>
+            <span class="badge badge-red">Failed</span>
+            <span class="badge badge-indigo">Syncing</span>
+            <span class="badge badge-slate">Paused</span>
+            <span class="badge badge-slate">Disconnected</span>
+          </div>
+          <p>You can manually re-trigger a sync at any time. Syncing is non-destructive — existing data is updated, not deleted.</p>
+
+          <h4>Course Detail View</h4>
+          <p>Click a course to open its detail page, which has two tabs:</p>
+          <ul>
+            <li><strong>Assignments tab</strong> — lists all assignments with submission counts, graded counts, and Canvas-posted counts.</li>
+            <li><strong>Students tab</strong> — shows every student, their section, and progress metrics (started, submitted, graded, posted).</li>
+          </ul>
+          <div class="screenshot-placeholder">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Screenshot: Instructor courses dashboard with Canvas sync panel</span>
+          </div>
+        </section>
+
+        <!-- Creating an Assignment -->
+        <section id="ig-assignment">
+          <h3>Creating an Assignment</h3>
+          <p>Click <strong>New Assignment</strong> from the course detail page. The assignment form is organized into five tabs. You can switch between tabs freely before saving.</p>
+
+          <h4>Tab 1 — Basic Information</h4>
+          <ul>
+            <li><strong>Title</strong> — The student-facing name (e.g., "Lab 3: Binary Search").</li>
+            <li><strong>Description</strong> — Markdown-formatted assignment brief shown in the student workspace. Explain the problem, expected behavior, and any constraints.</li>
+            <li><strong>Grading Instructions</strong> — Private notes visible only to instructors, TAs, and the AI grader. Use this to describe grading criteria, edge cases to watch for, or overall intent. Students never see this field.</li>
+            <li><strong>Instruction File</strong> — Upload a PDF, Word, or text file (e.g., a detailed spec sheet). It appears as a pinned read-only link in the student's workspace sidebar.</li>
+          </ul>
+
+          <h4>Tab 2 — Starter Files</h4>
+          <p>Provide skeleton code to pre-populate student workspaces. This helps students get oriented immediately without setting up boilerplate.</p>
+          <ul>
+            <li>Upload one or more files using the file picker or drag-and-drop.</li>
+            <li>Create files manually by clicking <strong>New File</strong> and entering a name and content.</li>
+            <li>Preview and edit each file's content inline with syntax highlighting.</li>
+            <li>Remove or replace individual files as needed.</li>
+          </ul>
+          <div class="callout">Starter files are copied into each student's workspace when they first open the assignment. Students can modify them freely.</div>
+
+          <div class="screenshot-placeholder">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Screenshot: New assignment form — Basic Info and Starter Files tabs</span>
+          </div>
+        </section>
+
+        <!-- Test Cases -->
+        <section id="ig-testcases">
+          <h3>Test Cases</h3>
+          <p>Test cases define how student code is evaluated. Each test case has a <strong>weight</strong> that determines its share of the total score. The final score is calculated as:</p>
+          <pre><code>score = (sum of weights of passed tests) / (sum of all weights) × points_possible</code></pre>
+          <p>Criterion supports five test case types. Click each type below to see its fields.</p>
+
+          <div class="tc-tabs" id="tcTabs">
+            <button class="tc-tab active" data-tab="stdin">stdin / stdout</button>
+            <button class="tc-tab" data-tab="unit">Unit Test</button>
+            <button class="tc-tab" data-tab="hidden">Hidden Test</button>
+            <button class="tc-tab" data-tab="script">Script (Bash)</button>
+            <button class="tc-tab" data-tab="special">Special Judge</button>
+          </div>
+
+          <!-- stdin_stdout -->
+          <div class="tc-panel active" id="tc-stdin">
+            <div class="card" style="border-color:#a5b4fc;">
+              <h4 style="margin-top:0;">stdin / stdout — Standard Input/Output Test</h4>
+              <p>The most common test type. Criterion feeds a standard input to the student's program and compares the program's standard output to the expected output.</p>
+              <ul>
+                <li><strong>Name</strong> — A label shown in grading feedback (e.g., "Test 1: Empty list").</li>
+                <li><strong>Stdin</strong> — Text input passed to the program via standard input. Upload a file for large inputs.</li>
+                <li><strong>Expected stdout</strong> — The exact expected output. Upload a file or type it directly.</li>
+                <li><strong>Float tolerance</strong> — Allowable numeric difference for floating-point outputs (e.g., <code>0.001</code>).</li>
+                <li><strong>Command-line arguments</strong> — Optional args passed when the program is invoked.</li>
+                <li><strong>Weight</strong> — Relative importance (e.g., 1 for basic, 3 for edge cases).</li>
+                <li><strong>Timeout</strong> — Per-test execution timeout, 1–60 seconds.</li>
+                <li><strong>Visible to student</strong> — If checked, students see the test name, inputs, expected output, and their output. If unchecked, this test is hidden.</li>
+              </ul>
+              <div class="callout">Trailing whitespace and newline differences are normalized before comparison, so minor formatting differences do not cause false failures.</div>
+            </div>
+          </div>
+
+          <!-- unit -->
+          <div class="tc-panel" id="tc-unit">
+            <div class="card" style="border-color:#a5b4fc;">
+              <h4 style="margin-top:0;">Unit Test — Language-Specific Framework Tests</h4>
+              <p>Write tests using the standard testing framework for each language. Criterion compiles and runs the test file alongside the student's code.</p>
+              <ul>
+                <li><strong>Test file</strong> — Upload or write the test code. Each language has its own format:</li>
+              </ul>
+              <table style="margin:0.75rem 0;font-size:0.875rem;">
+                <thead><tr><th>Language</th><th>Framework</th><th>Requirements</th></tr></thead>
+                <tbody>
+                  <tr><td>Python</td><td>pytest</td><td>Test functions prefixed with <code>test_</code></td></tr>
+                  <tr><td>C</td><td>CG_ASSERT</td><td>Call <code>cg_run_all_tests()</code> in <code>main()</code></td></tr>
+                  <tr><td>C++</td><td>CG_ASSERT</td><td>Call <code>cg_run_all_tests()</code> in <code>main()</code></td></tr>
+                  <tr><td>Java</td><td>CgUnitTest</td><td>Methods prefixed with <code>test</code> in a <code>CgUnitTest</code> class</td></tr>
+                  <tr><td>JavaScript</td><td>Jest-style</td><td><code>describe/it/expect</code>, import via <code>require('./main.js')</code></td></tr>
+                </tbody>
+              </table>
+              <div class="callout">Unit tests give students detailed pass/fail per assertion, helping them pinpoint exactly which function is broken.</div>
+            </div>
+          </div>
+
+          <!-- hidden -->
+          <div class="tc-panel" id="tc-hidden">
+            <div class="card" style="border-color:#a5b4fc;">
+              <h4 style="margin-top:0;">Hidden Test — Secret Evaluation Cases</h4>
+              <p>Hidden tests work identically to stdin/stdout tests but students never see the input, expected output, or actual output — only whether the test passed or failed.</p>
+              <ul>
+                <li><strong>Stdin</strong> — Input fed to the program (kept secret from students).</li>
+                <li><strong>Expected stdout</strong> — Expected output (kept secret).</li>
+                <li><strong>Float tolerance</strong> — Same as stdin/stdout.</li>
+                <li><strong>Command-line arguments</strong> — Optional arguments (kept secret).</li>
+              </ul>
+              <div class="callout-warn">Use hidden tests to check edge cases, boundary conditions, and robustness without giving away test data. Students learn to write defensive code.</div>
+            </div>
+          </div>
+
+          <!-- script -->
+          <div class="tc-panel" id="tc-script">
+            <div class="card" style="border-color:#a5b4fc;">
+              <h4 style="margin-top:0;">Script (Bash) — Custom Shell Judge</h4>
+              <p>Write a bash script that receives the student's submission directory. The script performs any checks you define. An exit code of <code>0</code> means pass; any non-zero exit means fail.</p>
+              <pre><code># Example: verify output file exists and has content
+if [ -s output.txt ]; then
+  exit 0
+else
+  exit 1
+fi</code></pre>
+              <p>The script has full access to the student's files, can inspect file structure, run the program multiple times, or validate side effects.</p>
+            </div>
+          </div>
+
+          <!-- special_judge -->
+          <div class="tc-panel" id="tc-special">
+            <div class="card" style="border-color:#a5b4fc;">
+              <h4 style="margin-top:0;">Special Judge — Custom Python Validator</h4>
+              <p>For problems with multiple valid answers (e.g., sorting algorithms with ties, approximate numeric outputs), write a Python 3 checker that awards a score fraction between 0.0 and 1.0.</p>
+              <pre><code>import sys
+
+expected_file = sys.argv[1]  # Path to expected output
+actual_file   = sys.argv[2]  # Path to student's output
+input_file    = sys.argv[3]  # Path to the test input
+
+with open(actual_file) as f:
+    actual = f.read().strip()
+
+# Custom validation logic here
+if is_valid(actual):
+    print("1.0")   # Full credit
+else:
+    print("0.0")   # No credit</code></pre>
+              <p>Print a value between <code>0.0</code> and <code>1.0</code> on the first line of stdout. This allows partial credit for partially-correct outputs.</p>
+            </div>
+          </div>
+
+          <div class="screenshot-placeholder" style="margin-top:1.5rem;">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Screenshot: Test case creation form</span>
+          </div>
+        </section>
+
+        <!-- Rubrics -->
+        <section id="ig-rubric">
+          <h3>Rubrics</h3>
+          <p>Rubrics let you grade submissions on qualitative criteria — code quality, design, documentation — in addition to automated test results. The rubric editor is available from the assignment detail page after saving.</p>
+
+          <h4>Creating a Rubric</h4>
+          <ol class="step-list">
+            <li>Open the assignment detail page and navigate to the <strong>Rubric</strong> section.</li>
+            <li>Click <strong>Add Criterion</strong> to create a grading dimension (e.g., "Code Readability").</li>
+            <li>Set the criterion's <strong>weight</strong> (relative importance among all criteria).</li>
+            <li>Add 3–5 <strong>performance levels</strong> for each criterion:<br>
+              Each level has a <strong>label</strong> (e.g., "Excellent"), a <strong>score fraction</strong> (0.0–1.0), and a <strong>description</strong> of what earns that level.</li>
+            <li>Repeat for each criterion. Weights are normalized automatically.</li>
+            <li>Save the rubric and mark it as <strong>active</strong> to apply it to grading.</li>
+          </ol>
+
+          <h4>AI-Assisted Rubric Generation</h4>
+          <p>Click <strong>Generate Rubric with AI</strong> and Criterion's AI will draft a complete rubric based on your assignment title, description, and grading instructions. Review and adjust the draft before saving.</p>
+
+          <h4>How the Rubric Score Is Calculated</h4>
+          <pre><code>rubric_score = sum(criterion.weight × chosen_level.score_fraction for each criterion)
+              / sum(criterion.weight for each criterion)
+
+final_rubric_points = rubric_score × assignment.points_possible</code></pre>
+          <p>The rubric score can be combined with or used independently from the automated test score depending on your grading workflow.</p>
+          <div class="screenshot-placeholder">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Screenshot: Rubric editor with criteria and performance levels</span>
+          </div>
+        </section>
+
+        <!-- Assignment Settings -->
+        <section id="ig-settings">
+          <h3>Assignment Settings</h3>
+          <p>The Settings tab gives you fine-grained control over deadlines, scoring, late policies, Canvas linking, and the execution environment.</p>
+
+          <h4>Dates & Points</h4>
+          <ul>
+            <li><strong>Due Date</strong> — Timezone-aware deadline. Students see a countdown in their workspace.</li>
+            <li><strong>Points Possible</strong> — Default 100. Determines the scale for test scores and rubric scores.</li>
+            <li><strong>Max Attempts</strong> — Leave blank for unlimited. Set a number to cap how many times students can submit.</li>
+          </ul>
+
+          <h4>Test Result Visibility</h4>
+          <p>Controls how much test feedback students see after submitting:</p>
+          <table>
+            <thead><tr><th>Mode</th><th>What students see</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Full Feedback</strong></td><td>Pass/fail per test, test name, stdin, expected output, actual output, and AI feedback</td></tr>
+              <tr><td><strong>Counts Only</strong></td><td>Summary only: "7 of 10 tests passed" — no per-test details</td></tr>
+              <tr><td><strong>Hidden</strong></td><td>Score only — no test information shown</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Submission Policy</h4>
+          <ul>
+            <li><strong>Latest submission</strong> — Only the most recent submission counts for the grade.</li>
+            <li><strong>Best effective score</strong> — The highest-scoring attempt (after late penalties) counts. Students can retry to improve.</li>
+          </ul>
+
+          <h4>Late Policy</h4>
+          <table>
+            <thead><tr><th>Policy</th><th>Behavior</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Hard Cutoff</strong></td><td>No submissions accepted after the deadline.</td></tr>
+              <tr><td><strong>Grace Period</strong></td><td>Allow submissions for N minutes/hours after the deadline with no penalty. Configure the grace period length.</td></tr>
+              <tr><td><strong>Penalty Per Day</strong></td><td>Allow late submissions indefinitely. Deduct a configurable percentage per 24 hours late (e.g., 10%/day). Effective score = raw × (1 − days_late × penalty%).</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Canvas Linking</h4>
+          <p>Search for the corresponding Canvas assignment by name and select it to link. Once linked, Criterion can post grades directly to that Canvas column. A "Canvas linked" badge confirms the connection.</p>
+
+          <h4>TA Permissions</h4>
+          <ul>
+            <li>Enable <strong>Allow TAs to post grades to Canvas</strong> so TAs can confirm and post grades without instructor approval.</li>
+            <li>When disabled, TA reviews move to a "TA reviewed" state and require instructor confirmation before posting.</li>
+          </ul>
+
+          <h4>Runtime Environment</h4>
+          <p>Override the default execution environment for specialized assignments:</p>
+          <ul>
+            <li><strong>Run timeout</strong> — Seconds allowed for the "Run" button in the student editor.</li>
+            <li><strong>Test timeout</strong> — Seconds allowed per test case during grading.</li>
+            <li><strong>Memory limit</strong> — Maximum memory (MB) per execution.</li>
+            <li><strong>Compile command</strong> — Override the default compiler command with a custom bash script body.</li>
+            <li><strong>Run command</strong> — Override how the compiled program is invoked.</li>
+            <li><strong>Dependency manifest</strong> — Notes describing packages or libraries the grading sandbox should have available.</li>
+            <li><strong>Hidden support files</strong> — Files injected into the sandbox that students cannot see (e.g., grading harness headers, fixture data files, helper libraries).</li>
+          </ul>
+          <div class="screenshot-placeholder">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Screenshot: Assignment Settings tab</span>
+          </div>
+        </section>
+
+        <!-- Deep Link -->
+        <section id="ig-deeplink">
+          <h3>Canvas Deep Link</h3>
+          <p>After saving an assignment, Criterion generates a unique <strong>deep link URL</strong>. When a student clicks this URL (typically embedded as a Canvas assignment link), they are automatically routed to the correct assignment workspace — no manual navigation required.</p>
+
+          <ol class="step-list">
+            <li>Save the assignment. Criterion generates the deep link automatically.</li>
+            <li>Copy the deep link URL from the assignment detail page.</li>
+            <li>In Canvas, open the assignment and paste the URL into the submission type field (External Tool or Website URL).</li>
+            <li>Students click the link in Canvas and are taken directly to their Criterion workspace.</li>
+          </ol>
+
+          <div class="callout">If the student has never opened the assignment before, Criterion automatically creates a new workspace seeded with your starter files.</div>
+        </section>
+
+        <!-- Running Grading -->
+        <section id="ig-grading">
+          <h3>Running Grading Sessions</h3>
+          <p>A grading session processes all student submissions for an assignment — compiling and executing each one against your test cases and generating AI feedback.</p>
+
+          <h4>Starting a Batch Grading Session</h4>
+          <ol class="step-list">
+            <li>Open the assignment detail page.</li>
+            <li>Click <strong>Start Grading Session</strong>.</li>
+            <li>Criterion enqueues all pending submissions as background jobs.</li>
+            <li>A real-time progress indicator shows completed students out of total (e.g., "14 / 47 completed").</li>
+            <li>Individual results appear in the review queue as they complete.</li>
+          </ol>
+
+          <h4>What Happens During Grading</h4>
+          <div class="pipeline" style="margin-top:1.5rem;">
+            <div class="pipeline-step">
+              <div class="pipeline-num">1</div>
+              <div class="pipeline-content">
+                <h4>Snapshot Captured</h4>
+                <p>The student's current workspace files are frozen into an immutable snapshot. This is the code that will be graded, regardless of any edits made after submission.</p>
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-num">2</div>
+              <div class="pipeline-content">
+                <h4>Code Execution</h4>
+                <p>Each test case is compiled and executed in an isolated Judge0 sandbox. Results (pass/fail, stdout, stderr, time, memory) are recorded per test.</p>
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-num">3</div>
+              <div class="pipeline-content">
+                <h4>Score Calculated</h4>
+                <p>The weighted sum of passing test cases is computed and converted to the assignment's point scale.</p>
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-num">4</div>
+              <div class="pipeline-content">
+                <h4>AI Feedback Generated</h4>
+                <p>Claude AI produces 300–400 words of personalized, rubric-aligned feedback per student — covering what passed, what failed, and specific improvement suggestions.</p>
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-num">5</div>
+              <div class="pipeline-content">
+                <h4>Result Ready for Review</h4>
+                <p>The result enters the review queue with status "pending review." You or a TA can now inspect it, adjust the score, add comments, and post to Canvas.</p>
+              </div>
+            </div>
+          </div>
+
+          <h4>Regrading</h4>
+          <p>If you update test cases or fix a grading issue, click <strong>Regrade All</strong> to re-execute every submission. You can also regrade an individual student's submission from the grading workspace.</p>
+          <div class="screenshot-placeholder">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Screenshot: Grading session in progress with real-time progress bar</span>
+          </div>
+        </section>
+
+        <!-- Grading Workspace -->
+        <section id="ig-review">
+          <h3>Grading Workspace</h3>
+          <p>The grading workspace is a three-panel interface where you review each student's submission, adjust scores, add comments, and post grades.</p>
+
+          <h4>Left Panel — Review Queue</h4>
+          <p>Students are organized into status buckets:</p>
+          <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin:0.75rem 0 1rem;">
+            <span class="badge badge-slate">Ungraded</span>
+            <span class="badge badge-amber">Late</span>
+            <span class="badge badge-red">Post Failed</span>
+            <span class="badge badge-indigo">Needs Review</span>
+            <span class="badge badge-green">Posted</span>
+            <span class="badge badge-green">Graded</span>
+          </div>
+          <p>Filter by section or search by student name/email. Click a student to load their submission in the main panel. Use the arrow keys or previous/next buttons to move through the queue.</p>
+
+          <h4>Main Panel — Submission Viewer</h4>
+          <ul>
+            <li><strong>Code viewer</strong> — File tree on the left, syntax-highlighted code on the right. Browse all submitted files.</li>
+            <li><strong>Test results</strong> — Per-test pass/fail icons with expandable detail rows showing stdout, expected output, and errors.</li>
+            <li><strong>AI feedback</strong> — Generated student feedback displayed inline.</li>
+            <li><strong>Rubric scoring</strong> — If an active rubric exists, select the appropriate performance level for each criterion. The rubric score updates in real time.</li>
+          </ul>
+
+          <h4>Right Panel — Grading Actions</h4>
+          <ul>
+            <li><strong>Manual score override</strong> — Type a custom score to override the auto-graded result.</li>
+            <li><strong>Feedback notes</strong> — Add text feedback shown to the student after posting.</li>
+            <li><strong>Inline code comments</strong> — Click any line number in the code viewer to open a comment thread. Comments support replies and can be marked as resolved.</li>
+            <li><strong>Flag for follow-up</strong> — Mark a submission as "needs review" with a reason note, visible only to graders.</li>
+          </ul>
+
+          <h4>Posting to Canvas</h4>
+          <p>When you are satisfied with the review, click <strong>Post to Canvas</strong>. The grade is sent directly to the linked Canvas assignment column. The student sees their grade in Canvas immediately.</p>
+
+          <div class="callout-warn">If the Canvas post fails (network error, token expiry), the status changes to "Post Failed" and you can retry from the queue without losing review data.</div>
+
+          <div class="screenshot-placeholder">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Screenshot: Grading workspace — three-panel layout with review queue, code viewer, and grading actions</span>
+          </div>
+        </section>
+
+        <!-- Roles & Permissions -->
+        <section id="ig-roles">
+          <h3>Roles &amp; Permissions</h3>
+          <p>Criterion has five user roles. Assign TAs and graders from the course or assignment settings.</p>
+          <div style="overflow-x:auto;">
+            <table class="perms-table">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th>Instructor</th>
+                  <th>TA</th>
+                  <th>Grader</th>
+                  <th>Student</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Create / edit assignments</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+                <tr><td>Create / edit test cases</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+                <tr><td>Start batch grading session</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+                <tr><td>Review & score submissions</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td></tr>
+                <tr><td>Add inline code comments</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td></tr>
+                <tr><td>Post grades to Canvas</td><td class="check">&#10003;</td><td class="partial">&#9675; (if enabled)</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+                <tr><td>View all student submissions</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="partial">&#9675; assigned only</td><td class="cross">&#10007;</td></tr>
+                <tr><td>Manage TAs / Graders</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+                <tr><td>Run plagiarism checks</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td></tr>
+                <tr><td>Submit assignments</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="cross">&#10007;</td><td class="check">&#10003;</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="margin-top:0.75rem;font-size:0.875rem;color:#64748b;">&#9675; = conditional permission configured by instructor</p>
+        </section>
+
+      </div><!-- /guide-content -->
+    </div><!-- /guide-layout -->
+  </div>
+</section>
+
+<!-- ===== STUDENT GUIDE ===== -->
+<section id="student-guide" class="section section-alt">
+  <div class="container">
+    <div class="section-label">For Students</div>
+    <h2 class="section-title">Student Guide</h2>
+    <p class="section-sub">Everything students need to know — from first login to viewing their graded results.</p>
+
+    <div class="guide-layout">
+      <aside class="guide-sidebar">
+        <h4>In this guide</h4>
+        <ul>
+          <li><a href="#sg-access">Accessing Criterion</a></li>
+          <li><a href="#sg-dashboard">Student Dashboard</a></li>
+          <li><a href="#sg-editor">Code Editor</a></li>
+          <li><a href="#sg-submit">Submitting</a></li>
+          <li><a href="#sg-results">Understanding Results</a></li>
+          <li><a href="#sg-history">Submission History</a></li>
+        </ul>
+      </aside>
+
+      <div class="guide-content">
+
+        <section id="sg-access">
+          <h3>Accessing Criterion</h3>
+          <p>There are two ways to access Criterion:</p>
+          <div class="grid-2" style="margin-top:1rem;">
+            <div class="card">
+              <h4 style="margin-top:0;color:#6366f1;">Via Canvas Deep Link</h4>
+              <p>Your instructor embeds a Criterion link in the Canvas assignment. Simply click it — Criterion automatically logs you in (if already registered) and opens your workspace for that assignment.</p>
+              <span class="badge badge-green">Recommended</span>
+            </div>
+            <div class="card">
+              <h4 style="margin-top:0;color:#6366f1;">Direct Login</h4>
+              <p>Go to the Criterion URL your instructor shared. Register with your institutional email, verify your email address, and log in. Navigate to "My Courses" to find your assignments.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="sg-dashboard">
+          <h3>Student Dashboard</h3>
+          <p>After logging in you land on <strong>My Courses</strong>. This shows all your enrolled courses and their assignments at a glance.</p>
+          <ul>
+            <li><strong>Course card</strong> — Shows course name, total assignments, and how many you have started, submitted, or have overdue.</li>
+            <li><strong>Assignment list</strong> — Expand a course to see individual assignments. Each row shows the assignment title, language badge, due date, and your current score.</li>
+            <li><strong>Status dots</strong> — Color-coded: gray (not started), blue (in progress), amber (submitted), sky (graded), emerald (posted to Canvas), red (overdue).</li>
+            <li><strong>Due risk indicator</strong> — Highlights assignments due soon, so you can prioritize.</li>
+          </ul>
+          <p>Click <strong>Open</strong> on any assignment to enter your workspace.</p>
+          <div class="screenshot-placeholder">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Screenshot: Student dashboard — My Courses view</span>
+          </div>
+        </section>
+
+        <section id="sg-editor">
+          <h3>The Code Editor (Workspace)</h3>
+          <p>The workspace is a browser-based IDE. No installation required — everything runs in your browser.</p>
+
+          <h4>File Tree (Left Sidebar)</h4>
+          <ul>
+            <li>Browse all your files and folders.</li>
+            <li>Right-click to create files, create folders, rename, or delete.</li>
+            <li>A pinned read-only instructions link appears at the top if your instructor uploaded an instruction file.</li>
+            <li>Modified files show a dot indicator until saved.</li>
+          </ul>
+
+          <h4>Monaco Code Editor (Center)</h4>
+          <ul>
+            <li>Full-featured editor with syntax highlighting for all supported languages.</li>
+            <li>Open multiple files using tabs at the top.</li>
+            <li>The <strong>entrypoint file</strong> is the file Criterion runs when you click "Run" or "Submit." It is indicated with a marker in the file tree. You can change the entrypoint by right-clicking a file.</li>
+            <li>Your edits are auto-saved periodically.</li>
+          </ul>
+
+          <h4>Bottom Panel — Run &amp; Test</h4>
+          <ul>
+            <li><strong>Stdin tab</strong> — Type or paste input that will be fed to your program when you run it manually. Useful for testing with custom input before submitting.</li>
+            <li><strong>Output tab</strong> — Shows stdout, stderr, compile output, exit code, execution time (ms), and memory usage (KB) after running.</li>
+          </ul>
+
+          <h4>Run Button</h4>
+          <p>Click <strong>Run</strong> to execute your code with the stdin you provided. This is a <strong>practice run</strong> — it does not count as a submission attempt. Results appear in the output panel within seconds. Use this to debug your program before submitting.</p>
+
+          <div class="screenshot-placeholder">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Screenshot: Student workspace — file tree, Monaco editor, and bottom run panel</span>
+          </div>
+        </section>
+
+        <section id="sg-submit">
+          <h3>Submitting an Assignment</h3>
+          <p>When you are ready, click <strong>Submit</strong> in the toolbar. A confirmation dialog shows how many attempts you have used and how many remain.</p>
+
+          <ol class="step-list">
+            <li>Click <strong>Submit</strong>.</li>
+            <li>Confirm in the dialog. Criterion captures a snapshot of all your current files.</li>
+            <li>Your code is automatically graded in the background — this takes a few seconds to a minute depending on test complexity.</li>
+            <li>The output panel updates in real time as each test case executes.</li>
+            <li>When grading is complete, your score and test results appear.</li>
+          </ol>
+
+          <h4>Deadlines &amp; Late Submissions</h4>
+          <p>The header always shows the due date and time remaining. Depending on your instructor's late policy:</p>
+          <ul>
+            <li><strong>Hard cutoff</strong> — The Submit button is disabled after the deadline.</li>
+            <li><strong>Grace period</strong> — You can submit for a short time after the deadline with no penalty.</li>
+            <li><strong>Late penalty</strong> — You can submit anytime, but a percentage is deducted per day late. Your raw score and effective score (after penalty) are both shown.</li>
+          </ul>
+          <div class="callout-warn">Each submission uses one attempt. If your instructor set a max attempt limit, the attempt counter in the header shows how many you have left. Plan your submissions accordingly.</div>
+        </section>
+
+        <section id="sg-results">
+          <h3>Understanding Your Results</h3>
+          <p>After your submission is graded, the bottom panel shows your results. What you see depends on the <strong>visibility setting</strong> your instructor chose:</p>
+
+          <table>
+            <thead><tr><th>Visibility Mode</th><th>What you see</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Full Feedback</strong></td><td>Pass/fail per test with test name, your actual output, expected output, any errors, and AI-generated feedback.</td></tr>
+              <tr><td><strong>Counts Only</strong></td><td>"7 of 10 tests passed" — no per-test details.</td></tr>
+              <tr><td><strong>Hidden</strong></td><td>Your total score only — no test information.</td></tr>
+            </tbody>
+          </table>
+
+          <h4>AI Feedback</h4>
+          <p>After grading, the AI feedback panel shows a 300–400 word analysis of your submission. It explains which tests passed, why some failed, and gives specific, actionable advice for improvement. This feedback is generated fresh for every submission.</p>
+
+          <h4>Grading Status</h4>
+          <p>Your result moves through these states as it is reviewed by your instructor team:</p>
+          <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin:0.75rem 0 1rem;">
+            <span class="badge badge-slate">Auto-graded</span>
+            <span>&#8594;</span>
+            <span class="badge badge-amber">TA Reviewed</span>
+            <span>&#8594;</span>
+            <span class="badge badge-indigo">Confirmed</span>
+            <span>&#8594;</span>
+            <span class="badge badge-green">Posted to Canvas</span>
+          </div>
+          <p>When the status reaches <strong>Posted to Canvas</strong>, your grade appears in your Canvas gradebook.</p>
+
+          <h4>Instructor Comments</h4>
+          <p>Your instructor or TA may add inline comments on specific lines of your code, or write general feedback notes. These appear alongside your submission results once the grade is posted.</p>
+        </section>
+
+        <section id="sg-history">
+          <h3>Submission History</h3>
+          <p>Click <strong>View All Attempts</strong> from the workspace to see every submission you have made for the assignment.</p>
+          <ul>
+            <li><strong>Attempt number</strong> and submission timestamp.</li>
+            <li><strong>Raw score</strong> — Score before any late penalty.</li>
+            <li><strong>Effective score</strong> — Score after any late penalty is applied.</li>
+            <li><strong>Late status</strong> and the specific penalty percentage applied.</li>
+            <li><strong>Grading state</strong> — Current review status.</li>
+            <li><strong>Code snapshot</strong> — View the exact files you submitted for each attempt (read-only).</li>
+          </ul>
+          <p>If the submission policy is set to <strong>Best Score</strong>, your highest effective score across all attempts is the one that counts for your final grade.</p>
+          <div class="screenshot-placeholder">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Screenshot: Submission history — attempt list with scores and status badges</span>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ADVANCED FEATURES ===== -->
+<section id="advanced" class="section">
+  <div class="container">
+    <div class="section-label">Advanced</div>
+    <h2 class="section-title">Advanced Features</h2>
+    <p class="section-sub">Tools for maintaining grading quality, academic integrity, and deeper pedagogical engagement.</p>
+
+    <!-- Calibration -->
+    <div class="accordion open" id="acc-calibration">
+      <div class="accordion-header" data-target="acc-calibration">
+        <span>Grader Calibration</span>
+        <span class="accordion-arrow">&#9660;</span>
+      </div>
+      <div class="accordion-body">
+        <p>Calibration ensures that AI-generated grades and human graders are scoring consistently. It is especially valuable at the start of a course or after updating a rubric.</p>
+        <h4>How Calibration Works</h4>
+        <ol class="step-list">
+          <li>Open the assignment detail page and click <strong>Calibration Workspace</strong>.</li>
+          <li>Create a calibration session. Criterion automatically selects 5–10 diverse submissions as calibration samples.</li>
+          <li>For each sample, review the student's code and the AI-generated grade, then enter your own instructor score.</li>
+          <li>After scoring all samples, the system calculates the <strong>bias delta</strong> — the average difference between your scores and the AI's scores.</li>
+          <li>Apply a <strong>correction factor</strong> to automatically adjust future AI grades, reducing systematic bias.</li>
+        </ol>
+        <p>Calibration history is saved so you can compare correction factors across sessions and audit grading consistency over time.</p>
+        <div class="screenshot-placeholder">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>Screenshot: Calibration workspace showing anchor scoring</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Peer Review -->
+    <div class="accordion" id="acc-peer">
+      <div class="accordion-header" data-target="acc-peer">
+        <span>Peer Review</span>
+        <span class="accordion-arrow">&#9660;</span>
+      </div>
+      <div class="accordion-body">
+        <p>Peer review lets students evaluate each other's code using your rubric, providing additional feedback and encouraging critical thinking about code quality.</p>
+        <h4>Configuring Peer Review</h4>
+        <ul>
+          <li><strong>Reviews required</strong> — How many submissions each student must review (e.g., 2).</li>
+          <li><strong>Allocation mode</strong> — Auto-random (shuffle across class), auto-section (within sections), or manual (instructor assigns pairs).</li>
+          <li><strong>Anonymity mode</strong>
+            <ul>
+              <li><em>Blind</em> — Reviewers and authors are both anonymous.</li>
+              <li><em>Reviewer hidden</em> — Author sees code but not reviewer's name.</li>
+              <li><em>Named</em> — Full identities visible.</li>
+            </ul>
+          </li>
+          <li><strong>Dates</strong> — Set when reviews open, the review deadline, and when reviews are released to reviewed students.</li>
+          <li><strong>Visibility settings</strong> — Control whether reviewers see the code, test results, stdout, and AI feedback of the submission they are reviewing.</li>
+        </ul>
+        <h4>Student Reviewer Experience</h4>
+        <p>Students access their review assignments from the <strong>My Reviews</strong> page. They see the assigned code (respecting visibility settings) and fill out a structured review form with rubric criterion scores, strengths, weaknesses, and suggestions.</p>
+        <h4>Instructor Moderation</h4>
+        <p>The peer review dashboard shows review completion counts, compliance metrics, and flagged reviews. Instructors can void problematic reviews or release all reviews to reviewees at once.</p>
+        <div class="screenshot-placeholder">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>Screenshot: Peer review configuration panel and student reviewer workspace</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plagiarism -->
+    <div class="accordion" id="acc-plagiarism">
+      <div class="accordion-header" data-target="acc-plagiarism">
+        <span>Plagiarism Detection</span>
+        <span class="accordion-arrow">&#9660;</span>
+      </div>
+      <div class="accordion-body">
+        <p>Criterion integrates with <strong>MOSS</strong> (Measure Of Software Similarity, Stanford) to detect code similarity across all student submissions for an assignment.</p>
+        <h4>Running a Check</h4>
+        <ol class="step-list">
+          <li>Open the assignment detail page and navigate to <strong>Plagiarism</strong>.</li>
+          <li>Set a similarity threshold (default 70%). Pairs above this threshold are flagged.</li>
+          <li>Click <strong>Run Plagiarism Check</strong>. Criterion collects all submissions and submits them to MOSS.</li>
+          <li>Results appear once the check completes (typically a few minutes).</li>
+        </ol>
+        <h4>Reading the Results</h4>
+        <p>Flagged pairs are shown in a table with:</p>
+        <ul>
+          <li><strong>Student 1 vs Student 2</strong> — Names of the flagged pair.</li>
+          <li><strong>Similarity %</strong> — Color-coded: <span style="color:#dc2626;font-weight:600;">90%+ (high risk)</span>, <span style="color:#d97706;font-weight:600;">70–89% (moderate)</span>, below threshold (informational).</li>
+          <li><strong>Matching lines</strong> — Number of similar lines detected.</li>
+          <li><strong>MOSS report link</strong> — Opens the detailed MOSS side-by-side code comparison in a new tab.</li>
+        </ul>
+        <div class="callout-warn">A high similarity score is evidence to investigate, not automatic proof of academic dishonesty. Always review the MOSS report before taking action.</div>
+      </div>
+    </div>
+
+    <!-- History & Audit -->
+    <div class="accordion" id="acc-history">
+      <div class="accordion-header" data-target="acc-history">
+        <span>History &amp; Audit Log</span>
+        <span class="accordion-arrow">&#9660;</span>
+      </div>
+      <div class="accordion-body">
+        <p>The History browser gives instructors a complete, immutable record of all grading activity.</p>
+        <ul>
+          <li><strong>Session list</strong> — Every grading session ever run for your courses, with type (batch vs single), status, date/time, and student counts.</li>
+          <li><strong>Session replay</strong> — Click any session to view the exact grades and test results as they were at the time of grading. Useful for grade disputes.</li>
+          <li><strong>Grading lineage</strong> — If a student was re-graded multiple times, you can trace the full chain of results — who changed what, when, and from what value to what value.</li>
+          <li><strong>Audit log entries</strong> — Every mutation (score change, comment add, Canvas post, regrade) is logged with a timestamp, actor identity, and IP address.</li>
+        </ul>
+        <p>All audit data is retained permanently (soft-delete only — records are never hard-deleted).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECURITY ===== -->
+<section id="security" class="section section-alt">
+  <div class="container">
+    <div class="section-label">Security &amp; Privacy</div>
+    <h2 class="section-title">Your data is protected</h2>
+    <p class="section-sub">Criterion is built with institutional security requirements in mind. Here is exactly how your data is handled.</p>
+
+    <div class="security-grid">
+
+      <div class="security-card">
+        <h4><span class="security-icon">&#128273;</span> Authentication &amp; Sessions</h4>
+        <ul>
+          <li>JWT tokens (HS256) with a 32+ character secret.</li>
+          <li>Sessions expire after 24 hours.</li>
+          <li>Tokens stored in <code>HttpOnly</code> cookies — inaccessible to JavaScript.</li>
+          <li>Email verification required before login.</li>
+          <li>Password hashed with bcrypt (no plaintext storage).</li>
+        </ul>
+      </div>
+
+      <div class="security-card">
+        <h4><span class="security-icon">&#128274;</span> Account Protection</h4>
+        <ul>
+          <li>Account lockout after <strong>5 failed login attempts</strong> (30-minute cooldown).</li>
+          <li>Rate limiting: 10 requests/minute per IP on auth endpoints.</li>
+          <li>Password reset via time-limited email tokens only.</li>
+          <li>Password requirements enforced: 8+ characters, letter + number.</li>
+        </ul>
+      </div>
+
+      <div class="security-card">
+        <h4><span class="security-icon">&#128190;</span> Data Protection</h4>
+        <ul>
+          <li>Canvas API tokens encrypted at rest using <strong>Fernet symmetric encryption</strong>.</li>
+          <li>All records use <strong>soft-delete</strong> — nothing is permanently destroyed.</li>
+          <li>Every grading mutation is logged in an immutable audit log.</li>
+          <li>Code submissions stored as immutable snapshots.</li>
+        </ul>
+      </div>
+
+      <div class="security-card">
+        <h4><span class="security-icon">&#128221;</span> Consent Management</h4>
+        <ul>
+          <li>All users must accept a data usage consent document before accessing the platform.</li>
+          <li>Consent documents are versioned — a new version requires re-acceptance.</li>
+          <li>Users who decline have their account deactivated.</li>
+          <li>Consent enforcement runs as middleware on every protected route.</li>
+        </ul>
+      </div>
+
+      <div class="security-card">
+        <h4><span class="security-icon">&#127760;</span> Network Security</h4>
+        <ul>
+          <li>CORS restricted to the single approved frontend origin.</li>
+          <li>Content Security Policy (CSP) headers on all responses.</li>
+          <li><code>X-Frame-Options: DENY</code> — prevents clickjacking.</li>
+          <li>HSTS enforced in production.</li>
+          <li><code>Permissions-Policy</code> disables camera, microphone, geolocation, and payment APIs.</li>
+        </ul>
+      </div>
+
+      <div class="security-card">
+        <h4><span class="security-icon">&#129399;</span> Code Execution Sandbox</h4>
+        <ul>
+          <li>Student code runs in an <strong>isolated Judge0 sandbox</strong> — completely separated from the application server.</li>
+          <li>Configurable CPU timeout and memory limits per test.</li>
+          <li>No network access from within the sandbox.</li>
+          <li>Execution results are fetched and stored; student code never touches the database directly.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== COMPARISON ===== -->
+<section id="compare" class="section">
+  <div class="container">
+    <div class="section-label">Comparison</div>
+    <h2 class="section-title">How Criterion compares</h2>
+    <p class="section-sub">If you are moving from Gradescope or Vocareum, here is a feature-by-feature comparison to help you evaluate the switch.</p>
+
+    <div class="compare-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="highlight">Criterion</th>
+            <th>Gradescope</th>
+            <th>Vocareum</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Automated code execution</td>
+            <td class="highlight check">&#10003; Python, C, C++, Java, JS</td>
+            <td class="check">&#10003; (via Docker)</td>
+            <td class="check">&#10003;</td>
+          </tr>
+          <tr>
+            <td>AI-generated per-student feedback</td>
+            <td class="highlight check">&#10003; Claude AI, rubric-aligned</td>
+            <td class="cross">&#10007;</td>
+            <td class="cross">&#10007;</td>
+          </tr>
+          <tr>
+            <td>AI-generated test cases</td>
+            <td class="highlight check">&#10003;</td>
+            <td class="cross">&#10007;</td>
+            <td class="cross">&#10007;</td>
+          </tr>
+          <tr>
+            <td>AI-generated rubrics</td>
+            <td class="highlight check">&#10003;</td>
+            <td class="cross">&#10007;</td>
+            <td class="cross">&#10007;</td>
+          </tr>
+          <tr>
+            <td>Canvas LMS native integration</td>
+            <td class="highlight check">&#10003; OAuth sync + grade postback</td>
+            <td class="partial">&#9675; Partial (LTI)</td>
+            <td class="partial">&#9675; Partial</td>
+          </tr>
+          <tr>
+            <td>Inline code review comments</td>
+            <td class="highlight check">&#10003; Threaded, resolvable</td>
+            <td class="check">&#10003;</td>
+            <td class="cross">&#10007;</td>
+          </tr>
+          <tr>
+            <td>Peer review (built-in)</td>
+            <td class="highlight check">&#10003; Configurable anonymity, rubric-based</td>
+            <td class="check">&#10003;</td>
+            <td class="cross">&#10007;</td>
+          </tr>
+          <tr>
+            <td>Plagiarism detection</td>
+            <td class="highlight check">&#10003; MOSS integration</td>
+            <td class="check">&#10003;</td>
+            <td class="partial">&#9675; Limited</td>
+          </tr>
+          <tr>
+            <td>stdin / stdout test cases</td>
+            <td class="highlight check">&#10003;</td>
+            <td class="check">&#10003;</td>
+            <td class="check">&#10003;</td>
+          </tr>
+          <tr>
+            <td>Unit test framework integration</td>
+            <td class="highlight check">&#10003; pytest, CG_ASSERT, Jest, JUnit-style</td>
+            <td class="partial">&#9675; Limited</td>
+            <td class="partial">&#9675; Limited</td>
+          </tr>
+          <tr>
+            <td>Hidden test cases</td>
+            <td class="highlight check">&#10003;</td>
+            <td class="check">&#10003;</td>
+            <td class="check">&#10003;</td>
+          </tr>
+          <tr>
+            <td>Custom bash script tests</td>
+            <td class="highlight check">&#10003;</td>
+            <td class="check">&#10003;</td>
+            <td class="partial">&#9675;</td>
+          </tr>
+          <tr>
+            <td>Special judge (partial-credit validator)</td>
+            <td class="highlight check">&#10003; Python validator, 0.0–1.0 score</td>
+            <td class="partial">&#9675;</td>
+            <td class="cross">&#10007;</td>
+          </tr>
+          <tr>
+            <td>Flexible late policies</td>
+            <td class="highlight check">&#10003; Hard cutoff, grace period, daily penalty</td>
+            <td class="check">&#10003;</td>
+            <td class="partial">&#9675;</td>
+          </tr>
+          <tr>
+            <td>Rubric calibration tools</td>
+            <td class="highlight check">&#10003; Anchor scoring + bias correction</td>
+            <td class="partial">&#9675; Partial</td>
+            <td class="cross">&#10007;</td>
+          </tr>
+          <tr>
+            <td>Real-time grading progress (SSE)</td>
+            <td class="highlight check">&#10003; Per-test live updates</td>
+            <td class="cross">&#10007;</td>
+            <td class="cross">&#10007;</td>
+          </tr>
+          <tr>
+            <td>In-browser IDE for students</td>
+            <td class="highlight check">&#10003; Monaco editor, multi-file, run &amp; submit</td>
+            <td class="cross">&#10007; Upload only</td>
+            <td class="check">&#10003;</td>
+          </tr>
+          <tr>
+            <td>Starter files / skeleton code</td>
+            <td class="highlight check">&#10003;</td>
+            <td class="cross">&#10007;</td>
+            <td class="check">&#10003;</td>
+          </tr>
+          <tr>
+            <td>Grading audit log</td>
+            <td class="highlight check">&#10003; Full immutable history</td>
+            <td class="partial">&#9675;</td>
+            <td class="cross">&#10007;</td>
+          </tr>
+          <tr>
+            <td>Canvas token encryption</td>
+            <td class="highlight check">&#10003; Fernet at-rest encryption</td>
+            <td>N/A</td>
+            <td>N/A</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:1rem;font-size:0.875rem;color:#64748b;">&#10003; = Full support &nbsp; &#9675; = Partial / limited &nbsp; &#10007; = Not supported. Information based on publicly available documentation.</p>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <div class="footer-brand">Criterion</div>
+    <p>AI-Powered Coding Assignments for Modern Educators</p>
+    <p style="margin-top:0.75rem;">Built with FastAPI &middot; React &middot; Judge0 &middot; Claude AI &middot; Canvas LMS</p>
+    <p style="margin-top:1rem;"><a href="https://github.com/md685-njit" target="_blank" rel="noopener">GitHub</a></p>
+    <p style="margin-top:1.5rem;font-size:0.8rem;color:#475569;">
+      To add screenshots: place images in a <code style="background:#0f172a;color:#a5b4fc;">docs/screenshots/</code> folder and replace the screenshot placeholder divs in <code style="background:#0f172a;color:#a5b4fc;">docs/index.html</code> with <code style="background:#0f172a;color:#a5b4fc;">&lt;img&gt;</code> tags.
+    </p>
+  </div>
+</footer>
+
+<script>
+  // ===== HAMBURGER MENU =====
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', isOpen);
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  });
+
+  // ===== ACTIVE NAV HIGHLIGHT (IntersectionObserver) =====
+  const navLinks = document.querySelectorAll('#navLinks a');
+  const sections = document.querySelectorAll('section[id]');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+
+  // ===== TEST CASE TABS =====
+  document.getElementById('tcTabs').addEventListener('click', e => {
+    const btn = e.target.closest('.tc-tab');
+    if (!btn) return;
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tc-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+    document.querySelectorAll('.tc-panel').forEach(p => p.classList.toggle('active', p.id === 'tc-' + tab));
+  });
+
+  // ===== ACCORDION =====
+  document.querySelectorAll('.accordion-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const acc = document.getElementById(header.closest('.accordion').id);
+      acc.classList.toggle('open');
+    });
+  });
+
+  // ===== INSTRUCTOR GUIDE SIDEBAR SCROLL SPY =====
+  const guideLinks = document.querySelectorAll('#instructorSidebar a');
+  const guideSections = document.querySelectorAll('.guide-content section[id]');
+  const guideObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        guideLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+        });
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  guideSections.forEach(s => guideObserver.observe(s));
+</script>
+</body>
+</html>
